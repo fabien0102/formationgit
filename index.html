@@ -67,7 +67,7 @@
 					</section>
 				</section>
 
-				<section> <!-- Concept de base -->
+				<section id="theory">
 					<section data-markdown>
             # Un peu de théorie
 
@@ -90,7 +90,7 @@
           </section>
 				</section>
 
-        <section> <!-- Commandes de base -->
+        <section id="baseCommands">
           <section data-markdown>
             # Les commandes de base
 
@@ -105,7 +105,7 @@
             La commande qui me permet de savoir où j'en suis.
 
             ```
-            git status
+            $ git status
             ```
 
             ![](http://1.bp.blogspot.com/_7dhTEg6HKu8/TUs3bEF8EmI/AAAAAAAAAB4/ZElMCbHvntA/s1600/6.jpg)
@@ -140,8 +140,8 @@
             ## Git commit
 
             ```
-            git add index.html
-            git commit
+            $ git add index.html
+            $ git commit
 
             ```
 
@@ -173,14 +173,14 @@
           </section>
         </section>
 
-        <section> <!-- git log-->
+        <section id="gitLog">
           <section data-markdown>
             ## Git log
 
             Avec cette commande je peux voir tous mes commits et ceux des autres
 
             ```
-            git log
+            $ git log
             ```
           </section>
           <section data-markdown>
@@ -215,7 +215,7 @@
             THE commande à connaître, c'est cette commande qui me permet de naviguer dans l'histoire
 
             ```
-            git checkout ed3322b55b4052
+            $ git checkout ed3322b55b4052
             ```
 
             ![](http://blog.17ruedesarts.fr/wp-content/uploads/2010/02/visiteur_01.jpg)
@@ -262,13 +262,13 @@
             Création d'une nouvelle branche :
 
             ```
-            git branch mybranch
-            git checkout mybranch
+            $ git branch mybranch
+            $ git checkout mybranch
             ```
             ou
 
             ```
-            git checkout -b mybranch
+            $ git checkout -b mybranch
             ```
 
             Je peux maintenant faire des commits qui seront sur cette branche
@@ -277,7 +277,7 @@
             <h2>Git branch</h2>
             <canvas id="gitExample1"></canvas>
             <p>Ici nous avons deux versions de code qui cohabitent.</p>
-            <p>Les deux bouts de code associés aux commits blanc ne peuvent (pour l'instan) pas être executé en même temps.</p>
+            <p>Les deux bouts de code associés aux commits blanc ne peuvent (pour l'instant) pas être executé en même temps.</p>
             <script type="text/javascript">
             (function(){
               var gitGraph1 = new GitGraph({
@@ -293,8 +293,8 @@
           </section>
           <section>
             <h2>Git branch</h2>
-            <pre><code data-trim>git checkout master
-git merge develop</code></pre>
+            <pre><code data-trim>$ git checkout master
+$ git merge develop</code></pre>
             <canvas id="gitExample2"></canvas>
             <p>Mes deux versions de code ont été <code>merge</code>.</p> 
             <p>J'ai maintenant mon code en entier sur master (en gris sur notre example).</p>
@@ -320,15 +320,192 @@ git merge develop</code></pre>
             J'ai décidé de la supprimer :
 
             ```
-            git branch -d develop
+            $ git branch -d develop
             ```
 
+          </section>
+          <section data-markdown>
+            # Bravo tu connais maintenant les commandes de base
+
+            ### Voyons maintenant comment interagir avec un serveur.
+          </section>
+        </section>
+
+        <section id="clientServeur">
+          <section data-markdown>
+            # Interaction client(s)/serveur(s)
+
+            ### Et si on travaillait ensemble ?
+          </section>
+        </section>
+
+        <section id="gitclone">
+          <section data-markdown>
+            ## Git Clone
+
+            ```
+            $ git clone https://github.com/fabien0102/formationgit.git
+            ```
+
+            Et voilà le code est copié sur ma machine.
+          </section>
+          <section data-markdown>
+            ## Git Clone
+
+            Je peux voir qu'une remote est automatiquement ajoutée.
+
+            ```
+            $ git remote -v
+            origin  git@github.com:fabien0102/formationgit.git (fetch)
+            origin  git@github.com:fabien0102/formationgit.git (push)
+            ```
+          </section>
+          <section data-markdown>
+            ## Git Clone
+
+            Je peux aussi constater que j'ai les branches distantes sur mon pc.
+
+            ```
+            $ git branch --all
+            * master
+            remotes/origin/master
+            ```
+          </section>
+        </section>
+
+        <section id="gitPull">
+          <section data-markdown>
+            ## Git pull
+
+            ```
+            $ git pull
+            ```
+
+            Je suis sur `master` et je viens de récupérer les commits du serveur.
+          </section>
+          <section>
+            <h2>Git pull</h2>
+            <canvas id="gitExample3"></canvas>
+            <p>La branche grise est la distante, en faisant un <code>git pull</code>, je merge la branche distante dans la local. </p>
+            <p>Le "problème" c'est que je viens de faire un commit de merge, celui-ci n'est pas obligatoire.</p>
+            <script type="text/javascript">
+            (function(){
+              var gitGraph1 = new GitGraph({
+                elementId: "gitExample3",
+                orientation: "horizontal"
+              });
+              var master = gitGraph1.branch("master").commit().commit().commit();
+              var dev = gitGraph1.branch("develop").commit();
+              master.commit().commit();
+              dev.commit().commit();
+              master.merge(dev);
+            }());
+            </script>
+          </section>
+          <section>
+            <h2>Git pull</h2>
+            <canvas id="gitExample4"></canvas>
+            <pre><code>$ git pull --rebase</code></pre>
+            <canvas id="gitExample5"></canvas>
+            <p>Et voilà, mes modifications (non présente sur le serveur) sont repassés après les commits distants récupérés</p>
+            <script type="text/javascript">
+            (function(){
+              var gitGraph1 = new GitGraph({
+                elementId: "gitExample4",
+                orientation: "horizontal"
+              });
+              var master = gitGraph1.branch("master").commit().commit().commit();
+              var dev = gitGraph1.branch("develop").commit();
+              master.commit().commit();
+              dev.commit().commit();
+              
+            }());
+
+            (function(){
+              var gitGraph1 = new GitGraph({
+                elementId: "gitExample5",
+                orientation: "horizontal"
+              });
+              var master = gitGraph1.branch("master").commit().commit().commit();
+              master.commit().commit();
+              var dev = gitGraph1.branch("develop");
+              dev.commit().commit().commit();
+              
+            }());
+            </script>
+          </section>
+        </section>
+        <section id="gitPush">
+          <section>
+            <h2>Git push</h2>
+            <canvas id="gitExample6"></canvas>
+            <pre><code>$ git push</code></pre>
+            <canvas id="gitExample7"></canvas>
+            <p>Et hop ! Tout le monde à mes modifications ! (Du coup je ne peux plus les modifier)</p>
+            <script type="text/javascript">
+            (function(){
+              var gitGraph1 = new GitGraph({
+                elementId: "gitExample6",
+                orientation: "horizontal"
+              });
+              var master = gitGraph1.branch("master").commit().commit().commit();
+              master.commit().commit();
+              var dev = gitGraph1.branch("develop");
+              dev.commit().commit().commit();
+              dev.commit().commit();
+              
+            }());
+
+            (function(){
+              var gitGraph1 = new GitGraph({
+                elementId: "gitExample7",
+                orientation: "horizontal"
+              });
+              var master = gitGraph1.branch("master").commit().commit().commit();
+              master.commit().commit();
+              var dev = gitGraph1.branch("develop");
+              dev.commit().commit().commit();
+              dev.merge(master);
+            }());            
+            </script>
+          </section>
+          <section data-markdown>
+            ## git push
+
+            Je peux aussi décider de créer une nouvelle branche distante
+
+            ```
+            $ git push origin myBadassFeature
+            ```
+
+            ou d'en supprimer
+
+             ```
+            $ git push origin :myBadassFeature
+            ```
+          </section>
+        </section>
+        <section id="graphicalTools">
+          <section data-markdown>
+            # Les outils graphiques
+
+            ### Ba oui, c'est quand même plus simple ^^
+          </section>
+          <section data-markdown>
+            ## Les outils graphiques
+
+            * Git gui
+            * Source tree
+          </section>
+          <section data-markdown>
+            ## Source Tree
+            ![](http://www.sourcetreeapp.com/images/sourcetree_hero_win_full_interface_windows.png)
           </section>
         </section>
 
 				<section>
 					<h1>THE END</h1>
-					<h3>BY Hakim El Hattab / hakim.se</h3>
+					<h3>BY Fabien BERNARD</h3>
 				</section>
 
 			</div>
